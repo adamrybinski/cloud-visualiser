@@ -1,43 +1,32 @@
 import pl from "tau-prolog";
-import appCode from "app.pl";
-
-const session = pl.create();
-session.consult(appCode);
+import appCode from "./app.pl";
 
 export default {
   async fetch(request) {
+    const session = pl.create();
+    session.consult(appCode);
+
     const url = new URL(request.url);
-    const method = request.method;
-    const pathname = url.pathname;
-    
-    return new Promise((resolve) => {
-      const query = `handle_request('${method}', '${pathname}', Result).`;
-      
-      session.query(query, {
-        success: () => {
-          session.answer((answer) => {
-            if (answer === false) {
-              resolve(new Response("Query failed", { 
-                headers: { "Content-Type": "text/plain" } 
-              }));
-            } else {
-              const formatted = session.format_answer(answer);
-              const result = formatted.includes('Result = ') 
-                ? formatted.split('Result = ')[1] 
-                : "Request processed";
-              
-              resolve(new Response(result, { 
-                headers: { "Content-Type": "text/plain" } 
-              }));
-            }
-          });
-        },
-        error: (err) => {
-          resolve(new Response(`Error: ${err}`, { 
-            headers: { "Content-Type": "text/plain" } 
-          }));
+    const method = request.method.toLowerCase();
+    const path = url.pathname;
+    const accept = request.headers.get('accept') || '';
+
+    return new Promise(resolve => {
+      session.query(`route('${method}', '${path}', '${accept}', Action, Data).`);
+      session.answer(answer => {
+        if (!answer) return resolve(new Response('Not found', { status: 404 }));
+
+        const action = answer.lookup('Action').toString();
+        const data = answer.lookup('Data').toString();
+
+        if (action === 'html') {
+          resolve(new Response(data, { headers: { 'Content-Type': 'text/html' } }));
+        } else if (action === 'json') {
+          resolve(new Response(data, { headers: { 'Content-Type': 'application/json' } }));
+        } else {
+          resolve(new Response('Not found', { status: 404 }));
         }
       });
     });
-  },
+  }
 };
