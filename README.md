@@ -1,1 +1,1 @@
-Knowledge visualization is a powerful tool for understanding complex system through prolog and logic programming. This repository contains a Prolog implementation that allows users to visualize knowledge graphs and relationships between entities.
+This repository contains a template for Javascript Tau Prolog implementation that allows deploy of prolog driven application on cloudflare workers
