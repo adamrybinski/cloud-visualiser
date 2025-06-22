@@ -1,0 +1,14 @@
+{
+  "name": "knowledge-vizualization",
+  "version": "0.0.1",
+  "devDependencies": {
+    "wrangler": "latest",
+    "tau-prolog": "github:guregu/tau-prolog#master"
+  },
+  "private": true,
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "platform": "node"
+}

@@ -1,0 +1,13 @@
+name = "tau-template"
+main = "src/server.js"
+account_id = "youraccountid"
+compatibility_date = "2025-05-25"
+compatibility_flags = [
+  "nodejs_compat",
+  "nodejs_compat_populate_process_env"
+]
+
+[[rules]]
+type = "Text"
+globs = ["**/*.pl"]
+fallthrough = true
