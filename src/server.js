@@ -1,10 +1,10 @@
 import pl from "tau-prolog";
-import appCode from "./app.pl";
+import application from "./app.pl";
 
 export default {
   async fetch(request) {
     const session = pl.create();
-    session.consult(appCode);
+    session.consult(application);
 
     const url = new URL(request.url);
     const method = request.method.toLowerCase();
